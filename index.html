@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GWOS Payload Terminal</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="terminal"></div>
+
+  <div class="exit-button" id="exitBtn">
+    <a href="https://subscribepage.io/GrimmWareOS">[ EXIT TERMINAL ]</a>
+  </div>
+
+  <script>
+    const lines = [
+      '>>> Initializing packet...',
+      '>>> Locating terminal node...',
+      '>>> Breaching GWOS protocols...',
+      '>>> Warning! Warning!',
+      '>>> Unauthorized access!!!',
+      '>>> Tracing signal...',
+      '>>> Signal Distorted...',
+      '>>> Source unknown....',
+      '>>> Injecting aesthetic malware...',
+      '>>> Manifesting audio signature...',
+      '>>> Payload authorized...',
+      '>>> [GIZMO://AUTH/AFFIRM]',
+      '>>> Terminal unlocked...',
+      '>>> Decrypting reward...',
+      '>>> Initializing payload conduit...',
+      '=====[ PAYLOAD ENGAGED ]====='
+    ];
+
+    const extraLines = [
+      { text: '>>> ACCESS NODE:', class: 'extra-line green' },
+      { text: '>>> https://grimmware-os.bandcamp.com/', class: 'extra-line cyan bandcamp' },
+      { text: '>>> DECRYPTING TOKEN...', class: 'extra-line purple' },
+      { text: '>>> grimmware15 <<<', class: 'extra-line flicker' },
+      { text: '>>> DISCOUNT TOKEN VIABLE <<<', class: 'extra-line cyan' },
+      { text: '>>> AUD!0 !NF3CT!ON !N!T!AL!Z3D', class: 'extra-line green' },
+      { text: '>>> TRANSMISSION TERMINATED', class: 'extra-line red' }
+    ];
+
+    const terminal = document.getElementById('terminal');
+    const exitBtn = document.getElementById('exitBtn');
+
+    function renderLine(text, delay, cssClass, isLink = false) {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          const line = document.createElement('div');
+          line.classList.add('payload-line');
+          if (cssClass) line.classList.add(...cssClass.split(' '));
+
+          if (isLink) {
+            const anchor = document.createElement('a');
+            anchor.href = 'https://grimmware-os.bandcamp.com/';
+            anchor.target = '_blank';
+            anchor.className = 'bandcamp-link';
+            anchor.textContent = text;
+            line.appendChild(anchor);
+          } else {
+            line.textContent = text;
+          }
+
+          terminal.appendChild(line);
+          resolve();
+        }, delay);
+      });
+    }
+
+    async function runPayload() {
+      for (let i = 0; i < lines.length; i++) {
+        await renderLine(lines[i], 400);
+      }
+
+      for (let i = 0; i < extraLines.length; i++) {
+        const isLink = extraLines[i].class.includes('bandcamp');
+        await renderLine(extraLines[i].text, 300, extraLines[i].class, isLink);
+      }
+
+      setTimeout(() => {
+        exitBtn.style.display = 'block';
+      }, 400);
+    }
+
+    runPayload();
+  </script>
+</body>
+</html>

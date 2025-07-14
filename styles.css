@@ -1,0 +1,109 @@
+/* General Layout */
+html, body {
+  height: 100%;
+  margin: 0;
+  background-color: #000;
+  color: #00ffcc;
+  font-family: 'Courier New', Courier, monospace;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 2em;
+}
+
+/* Terminal Content Area */
+#terminal {
+  flex-grow: 1;
+}
+
+/* Exit Button */
+.exit-button {
+  display: none;
+  margin-top: auto;
+  padding-top: 2em;
+  text-align: left;
+}
+
+.exit-button a {
+  color: #c77dff;
+  text-decoration: none;
+  padding: 0.3em 0.6em;
+  border: 1px solid #c77dff;
+  display: inline-block;
+  transition: all 0.2s ease;
+}
+
+.exit-button a:hover {
+  background-color: #c77dff;
+  color: #000;
+  text-shadow: none;
+}
+
+/* Terminal Payload Animation */
+.payload-line {
+  opacity: 0;
+  margin-bottom: 0.5em;
+  animation: type 0.05s steps(30, end) forwards;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+@keyframes type {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Extra Payload Line Variants */
+.extra-line {
+  margin-bottom: 0.5em;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.extra-line.green {
+  color: #39ff14;
+  text-shadow: 0 0 5px #39ff14;
+}
+
+.extra-line.cyan {
+  color: #00ffee;
+  text-shadow: 0 0 4px #00ffee;
+}
+
+.extra-line.purple {
+  color: #c77dff;
+  text-shadow: 0 0 4px #c77dff;
+}
+
+.extra-line.red {
+  color: #ff004c;
+  text-shadow: 0 0 4px #ff004c;
+}
+
+/* Flicker Animation for Key Payloads */
+.extra-line.flicker {
+  animation: flickerColor 1.2s infinite alternate;
+  color: #39ff14;
+  text-shadow: 0 0 4px #39ff14;
+}
+
+@keyframes flickerColor {
+  0%, 49% {
+    color: #39ff14;
+    text-shadow: 0 0 4px #39ff14;
+  }
+  50%, 100% {
+    color: #ff004c;
+    text-shadow: 0 0 4px #ff004c;
+  }
+}
+
+/* Bandcamp link flicker */
+.bandcamp-link {
+  animation: flickerColor 1.2s infinite alternate;
+  text-decoration: none;
+}
+
+.bandcamp-link:hover {
+  text-decoration: underline;
+}
