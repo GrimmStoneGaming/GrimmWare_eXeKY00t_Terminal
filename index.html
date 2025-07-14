@@ -49,41 +49,30 @@
       word-break: break-word;
     }
 
-    .extra-line.green {
-      color: #39ff14;
-      text-shadow: 0 0 5px #39ff14;
-    }
-
-    .extra-line.cyan {
-      color: #00ffee;
-      text-shadow: 0 0 4px #00ffee;
-    }
-
-    .extra-line.purple {
-      color: #c77dff;
-      text-shadow: 0 0 4px #c77dff;
-    }
-
-    .extra-line.red {
+    .green { color: #39ff14; text-shadow: 0 0 5px #39ff14; }
+    .yellow { color: #ffe600; text-shadow: 0 0 5px #ffe600; }
+    .red-flash {
       color: #ff004c;
-      text-shadow: 0 0 4px #ff004c;
+      animation: redFlash 1s infinite alternate;
     }
 
-    .extra-line.flicker {
-      animation: flickerColor 1.2s infinite alternate;
-      color: #39ff14;
-      text-shadow: 0 0 4px #39ff14;
+    @keyframes redFlash {
+      0% { color: #ff004c; text-shadow: 0 0 4px #ff004c; }
+      100% { color: #000; text-shadow: none; }
     }
 
-    @keyframes flickerColor {
-      0%, 49% {
-        color: #39ff14;
-        text-shadow: 0 0 4px #39ff14;
-      }
-      50%, 100% {
-        color: #ff004c;
-        text-shadow: 0 0 4px #ff004c;
-      }
+    .glitch {
+      color: #ff66ff;
+      animation: glitch 0.3s infinite;
+    }
+
+    @keyframes glitch {
+      0% { transform: translate(0, 0); opacity: 1; }
+      20% { transform: translate(-1px, 1px); opacity: 0.8; }
+      40% { transform: translate(1px, -1px); opacity: 0.9; }
+      60% { transform: translate(-2px, 0); opacity: 0.6; }
+      80% { transform: translate(2px, 2px); opacity: 0.7; }
+      100% { transform: translate(0, 0); opacity: 1; }
     }
 
     .cursor {
@@ -94,20 +83,25 @@
     }
 
     @keyframes blink {
-      0% { opacity: 1; }
+      0%, 100% { opacity: 1; }
       50% { opacity: 0; }
-      100% { opacity: 1; }
     }
 
     .bandcamp-link {
-      color: #00ffee;
-      text-shadow: 0 0 4px #00ffee;
       animation: flickerColor 1.2s infinite alternate;
       text-decoration: none;
+      color: #00ffee;
     }
 
-    .bandcamp-link:hover {
-      text-decoration: underline;
+    @keyframes flickerColor {
+      0%, 49% {
+        color: #00ffee;
+        text-shadow: 0 0 4px #00ffee;
+      }
+      50%, 100% {
+        color: #c77dff;
+        text-shadow: 0 0 4px #c77dff;
+      }
     }
   </style>
 </head>
@@ -120,31 +114,28 @@
 
   <script>
     const lines = [
-      '>>> Initializing packet...',
-      '>>> Locating terminal node...',
-      '>>> Breaching GWOS protocols...',
-      '>>> Warning! Warning!',
-      '>>> Unauthorized access!!!',
-      '>>> Tracing signal...',
-      '>>> Signal Distorted...',
-      '>>> Source unknown....',
-      '>>> Injecting aesthetic malware...',
-      '>>> Manifesting audio signature...',
-      '>>> Payload authorized...',
-      '>>> [GIZMO://AUTH/AFFIRM]',
-      '>>> Terminal unlocked...',
-      '>>> Decrypting reward...',
-      '>>> Initializing payload conduit...',
-      '=====[ PAYLOAD ENGAGED ]====='
-    ];
-
-    const extraLines = [
-      { type: 'link', text: '>>> https://grimmware-os.bandcamp.com/', class: 'extra-line cyan' },
-      { type: 'text', text: '>>> DECRYPTING TOKEN...', class: 'extra-line purple' },
-      { type: 'text', text: '>>> grimmware15 <<<', class: 'extra-line flicker' },
-      { type: 'text', text: '>>> DISCOUNT TOKEN VIABLE <<<', class: 'extra-line cyan' },
-      { type: 'text', text: '>>> AUD!0 !NF3CT!ON !N!T!AL!Z3D', class: 'extra-line green' },
-      { type: 'text', text: '>>> TRANSMISSION TERMINATED', class: 'extra-line red' }
+      { text: '>>> Initializing packet...', class: '' },
+      { text: '>>> Locating terminal node...', class: '' },
+      { text: '>>> Breaching GWOS protocols...', class: '' },
+      { text: '>>> Warning! Warning!', class: 'red-flash' },
+      { text: '>>> Unauthorized access!!!', class: 'red-flash' },
+      { text: '>>> Tracing signal...', class: '' },
+      { text: '>>> s!gnAL d!5t0rT3D...', class: 'glitch' },
+      { text: '>>> Source unknown....', class: '' },
+      { text: '>>> Injecting aesthetic malware...', class: '' },
+      { text: '>>> Manifesting audio signature...', class: '' },
+      { text: '>>> Payload authorized...', class: 'green' },
+      { text: '>>> [GIZMO://AUTH/AFFIRM]', class: 'yellow' },
+      { text: '>>> TERMINAL UNLOCKED...', class: 'green' },
+      { text: '>>> Decrypting reward...', class: '' },
+      { text: '>>> Initializing payload conduit...', class: '' },
+      { text: '=====[ PAYLOAD ENGAGED ]=====', class: '' },
+      { type: 'link', text: '>>> https://grimmware-os.bandcamp.com/', class: 'bandcamp-link' },
+      { text: '>>> DECRYPTING TOKEN...', class: 'purple' },
+      { text: '>>> grimmware15 <<<', class: 'green flicker' },
+      { text: '>>> DISCOUNT TOKEN VIABLE', class: 'cyan' },
+      { text: '>>> AUD!0 !NF3CT!ON !N!T!AL!Z3D', class: 'green' },
+      { text: '>>> TRANSMISSION TERMINATED', class: 'red' }
     ];
 
     const terminal = document.getElementById('terminal');
@@ -167,7 +158,6 @@
         line.appendChild(cursor);
 
         let i = 0;
-
         function typeChar() {
           if (i < text.length) {
             cursor.insertAdjacentText('beforebegin', text.charAt(i));
@@ -178,45 +168,28 @@
             resolve();
           }
         }
-
         typeChar();
-      });
-    }
-
-    async function popInLinkLine(text, cssClass, url) {
-      return new Promise(resolve => {
-        const line = document.createElement('div');
-        line.classList.add('payload-line');
-        if (cssClass) line.classList.add(...cssClass.split(' '));
-
-        const anchor = document.createElement('a');
-        anchor.href = url;
-        anchor.target = '_blank';
-        anchor.className = 'bandcamp-link';
-        anchor.textContent = text;
-
-        line.appendChild(anchor);
-        terminal.appendChild(line);
-
-        resolve();
       });
     }
 
     async function runPayload() {
       for (const line of lines) {
-        await typeLine(line);
-        await new Promise(r => setTimeout(r, pauseBetweenLines));
-      }
-
-      for (const entry of extraLines) {
-        if (entry.type === 'link') {
-          await popInLinkLine(entry.text, entry.class, 'https://grimmware-os.bandcamp.com/');
+        if (line.type === 'link') {
+          const el = document.createElement('div');
+          el.classList.add('payload-line');
+          const link = document.createElement('a');
+          link.href = 'https://grimmware-os.bandcamp.com/';
+          link.target = '_blank';
+          link.className = line.class;
+          link.textContent = line.text;
+          el.appendChild(link);
+          terminal.appendChild(el);
+          await new Promise(resolve => setTimeout(resolve, pauseBetweenLines));
         } else {
-          await typeLine(entry.text, entry.class);
+          await typeLine(line.text, line.class);
+          await new Promise(resolve => setTimeout(resolve, pauseBetweenLines));
         }
-        await new Promise(r => setTimeout(r, pauseBetweenLines));
       }
-
       exitBtn.style.display = 'block';
     }
 
