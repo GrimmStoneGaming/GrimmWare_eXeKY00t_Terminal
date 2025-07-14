@@ -139,7 +139,7 @@
     ];
 
     const extraLines = [
-      { type: 'link', text: '>>> https://grimmware-os.bandcamp.com/', class: 'extra-line cyan bandcamp-link' },
+      { type: 'link', text: '>>> https://grimmware-os.bandcamp.com/', class: 'extra-line cyan' },
       { type: 'text', text: '>>> DECRYPTING TOKEN...', class: 'extra-line purple' },
       { type: 'text', text: '>>> grimmware15 <<<', class: 'extra-line flicker' },
       { type: 'text', text: '>>> DISCOUNT TOKEN VIABLE <<<', class: 'extra-line cyan' },
@@ -183,20 +183,21 @@
       });
     }
 
-    async function popLinkLine(text, cssClass) {
+    async function popInLinkLine(text, cssClass, url) {
       return new Promise(resolve => {
         const line = document.createElement('div');
         line.classList.add('payload-line');
         if (cssClass) line.classList.add(...cssClass.split(' '));
 
         const anchor = document.createElement('a');
-        anchor.href = 'https://grimmware-os.bandcamp.com/';
+        anchor.href = url;
         anchor.target = '_blank';
         anchor.className = 'bandcamp-link';
         anchor.textContent = text;
 
         line.appendChild(anchor);
         terminal.appendChild(line);
+
         resolve();
       });
     }
@@ -209,7 +210,7 @@
 
       for (const entry of extraLines) {
         if (entry.type === 'link') {
-          await popLinkLine(entry.text, entry.class);
+          await popInLinkLine(entry.text, entry.class, 'https://grimmware-os.bandcamp.com/');
         } else {
           await typeLine(entry.text, entry.class);
         }
