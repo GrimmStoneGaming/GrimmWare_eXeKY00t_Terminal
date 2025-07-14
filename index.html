@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -45,10 +46,10 @@
     const terminal = document.getElementById('terminal');
     const exitBtn = document.getElementById('exitBtn');
 
-    const typingSpeed = 25; // ms per character
-    const pauseBetweenLines = 400; // ms between each line
+    const typingSpeed = 25;
+    const pauseBetweenLines = 400;
 
-    function typeLine(text, cssClass, isLink = false) {
+    async function typeLine(text, cssClass) {
       return new Promise(resolve => {
         const line = document.createElement('div');
         line.classList.add('payload-line');
@@ -57,8 +58,9 @@
         const cursor = document.createElement('span');
         cursor.classList.add('cursor');
         cursor.textContent = '|';
-        line.appendChild(cursor);
+
         terminal.appendChild(line);
+        line.appendChild(cursor);
 
         let i = 0;
 
@@ -84,8 +86,7 @@
       }
 
       for (let i = 0; i < extraLines.length; i++) {
-        const isLink = extraLines[i].class.includes('bandcamp');
-        await typeLine(extraLines[i].text, extraLines[i].class, isLink);
+        await typeLine(extraLines[i].text, extraLines[i].class);
         await new Promise(r => setTimeout(r, pauseBetweenLines));
       }
 
