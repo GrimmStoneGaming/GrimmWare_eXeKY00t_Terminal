@@ -80,9 +80,9 @@ html, body {
   text-shadow: 0 0 4px #ff004c;
 }
 
-/* Flicker Animation for Key Payloads */
+/* Flicker Token Animation */
 .extra-line.flicker {
-  animation: flickerColor 1.2s infinite alternate;
+  animation: flickerColor 0.9s infinite alternate;
   color: #39ff14;
   text-shadow: 0 0 4px #39ff14;
 }
@@ -98,7 +98,7 @@ html, body {
   }
 }
 
-/* Bandcamp link flicker */
+/* Bandcamp Link Flicker */
 .bandcamp-link {
   animation: flickerColor 1.2s infinite alternate;
   text-decoration: none;
