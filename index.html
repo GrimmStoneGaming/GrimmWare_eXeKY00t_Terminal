@@ -98,6 +98,17 @@
       50% { opacity: 0; }
       100% { opacity: 1; }
     }
+
+    .bandcamp-link {
+      color: #00ffee;
+      text-shadow: 0 0 4px #00ffee;
+      animation: flickerColor 1.2s infinite alternate;
+      text-decoration: none;
+    }
+
+    .bandcamp-link:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -128,12 +139,12 @@
     ];
 
     const extraLines = [
-      { text: '>>> ACCESS NODE: https://grimmware-os.bandcamp.com/', class: 'extra-line cyan' },
-      { text: '>>> DECRYPTING TOKEN...', class: 'extra-line purple' },
-      { text: '>>> grimmware15 <<<', class: 'extra-line flicker' },
-      { text: '>>> DISCOUNT TOKEN VIABLE <<<', class: 'extra-line cyan' },
-      { text: '>>> AUD!0 !NF3CT!ON !N!T!AL!Z3D', class: 'extra-line green' },
-      { text: '>>> TRANSMISSION TERMINATED', class: 'extra-line red' }
+      { type: 'link', text: '>>> https://grimmware-os.bandcamp.com/', class: 'extra-line cyan bandcamp-link' },
+      { type: 'text', text: '>>> DECRYPTING TOKEN...', class: 'extra-line purple' },
+      { type: 'text', text: '>>> grimmware15 <<<', class: 'extra-line flicker' },
+      { type: 'text', text: '>>> DISCOUNT TOKEN VIABLE <<<', class: 'extra-line cyan' },
+      { type: 'text', text: '>>> AUD!0 !NF3CT!ON !N!T!AL!Z3D', class: 'extra-line green' },
+      { type: 'text', text: '>>> TRANSMISSION TERMINATED', class: 'extra-line red' }
     ];
 
     const terminal = document.getElementById('terminal');
@@ -143,33 +154,66 @@
     const pauseBetweenLines = 300;
 
     async function typeLine(text, cssClass) {
-      const line = document.createElement('div');
-      line.classList.add('payload-line');
-      if (cssClass) line.classList.add(...cssClass.split(' '));
+      return new Promise(resolve => {
+        const line = document.createElement('div');
+        line.classList.add('payload-line');
+        if (cssClass) line.classList.add(...cssClass.split(' '));
 
-      const cursor = document.createElement('span');
-      cursor.classList.add('cursor');
-      cursor.textContent = '|';
+        const cursor = document.createElement('span');
+        cursor.classList.add('cursor');
+        cursor.textContent = '|';
 
-      terminal.appendChild(line);
-      line.appendChild(cursor);
+        terminal.appendChild(line);
+        line.appendChild(cursor);
 
-      for (let i = 0; i < text.length; i++) {
-        await new Promise(resolve => setTimeout(resolve, typingSpeed));
-        cursor.insertAdjacentText('beforebegin', text.charAt(i));
-      }
+        let i = 0;
 
-      cursor.remove();
-      await new Promise(resolve => setTimeout(resolve, pauseBetweenLines));
+        function typeChar() {
+          if (i < text.length) {
+            cursor.insertAdjacentText('beforebegin', text.charAt(i));
+            i++;
+            setTimeout(typeChar, typingSpeed);
+          } else {
+            cursor.remove();
+            resolve();
+          }
+        }
+
+        typeChar();
+      });
+    }
+
+    async function popLinkLine(text, cssClass) {
+      return new Promise(resolve => {
+        const line = document.createElement('div');
+        line.classList.add('payload-line');
+        if (cssClass) line.classList.add(...cssClass.split(' '));
+
+        const anchor = document.createElement('a');
+        anchor.href = 'https://grimmware-os.bandcamp.com/';
+        anchor.target = '_blank';
+        anchor.className = 'bandcamp-link';
+        anchor.textContent = text;
+
+        line.appendChild(anchor);
+        terminal.appendChild(line);
+        resolve();
+      });
     }
 
     async function runPayload() {
       for (const line of lines) {
         await typeLine(line);
+        await new Promise(r => setTimeout(r, pauseBetweenLines));
       }
 
-      for (const { text, class: cssClass } of extraLines) {
-        await typeLine(text, cssClass);
+      for (const entry of extraLines) {
+        if (entry.type === 'link') {
+          await popLinkLine(entry.text, entry.class);
+        } else {
+          await typeLine(entry.text, entry.class);
+        }
+        await new Promise(r => setTimeout(r, pauseBetweenLines));
       }
 
       exitBtn.style.display = 'block';
