@@ -34,8 +34,7 @@
     ];
 
     const extraLines = [
-      { text: '>>> ACCESS NODE:', class: 'extra-line green' },
-      { text: '>>> https://grimmware-os.bandcamp.com/', class: 'extra-line cyan bandcamp' },
+      { text: '>>> ACCESS NODE: https://grimmware-os.bandcamp.com/', class: 'extra-line cyan' },
       { text: '>>> DECRYPTING TOKEN...', class: 'extra-line purple' },
       { text: '>>> grimmware15 <<<', class: 'extra-line flicker' },
       { text: '>>> DISCOUNT TOKEN VIABLE <<<', class: 'extra-line cyan' },
@@ -47,7 +46,7 @@
     const exitBtn = document.getElementById('exitBtn');
 
     const typingSpeed = 25;
-    const pauseBetweenLines = 400;
+    const pauseBetweenLines = 300;
 
     async function typeLine(text, cssClass) {
       return new Promise(resolve => {
@@ -63,7 +62,6 @@
         line.appendChild(cursor);
 
         let i = 0;
-
         function typeChar() {
           if (i < text.length) {
             cursor.insertAdjacentText('beforebegin', text.charAt(i));
@@ -80,13 +78,13 @@
     }
 
     async function runPayload() {
-      for (let i = 0; i < lines.length; i++) {
-        await typeLine(lines[i], '');
+      for (const line of lines) {
+        await typeLine(line);
         await new Promise(r => setTimeout(r, pauseBetweenLines));
       }
 
-      for (let i = 0; i < extraLines.length; i++) {
-        await typeLine(extraLines[i].text, extraLines[i].class);
+      for (const { text, class: cssClass } of extraLines) {
+        await typeLine(text, cssClass);
         await new Promise(r => setTimeout(r, pauseBetweenLines));
       }
 
