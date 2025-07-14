@@ -2,9 +2,103 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GWOS Payload Terminal</title>
-  <link rel="stylesheet" href="styles.css" />
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background-color: #000;
+      color: #00ffcc;
+      font-family: 'Courier New', Courier, monospace;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 2em;
+    }
+
+    #terminal {
+      flex-grow: 1;
+    }
+
+    .exit-button {
+      display: none;
+      margin-top: auto;
+      padding-top: 2em;
+      text-align: left;
+    }
+
+    .exit-button a {
+      color: #c77dff;
+      text-decoration: none;
+      padding: 0.3em 0.6em;
+      border: 1px solid #c77dff;
+      display: inline-block;
+      transition: all 0.2s ease;
+    }
+
+    .exit-button a:hover {
+      background-color: #c77dff;
+      color: #000;
+      text-shadow: none;
+    }
+
+    .payload-line {
+      margin-bottom: 0.5em;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .extra-line.green {
+      color: #39ff14;
+      text-shadow: 0 0 5px #39ff14;
+    }
+
+    .extra-line.cyan {
+      color: #00ffee;
+      text-shadow: 0 0 4px #00ffee;
+    }
+
+    .extra-line.purple {
+      color: #c77dff;
+      text-shadow: 0 0 4px #c77dff;
+    }
+
+    .extra-line.red {
+      color: #ff004c;
+      text-shadow: 0 0 4px #ff004c;
+    }
+
+    .extra-line.flicker {
+      animation: flickerColor 1.2s infinite alternate;
+      color: #39ff14;
+      text-shadow: 0 0 4px #39ff14;
+    }
+
+    @keyframes flickerColor {
+      0%, 49% {
+        color: #39ff14;
+        text-shadow: 0 0 4px #39ff14;
+      }
+      50%, 100% {
+        color: #ff004c;
+        text-shadow: 0 0 4px #ff004c;
+      }
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      background-color: #00ffcc;
+      animation: blink 0.9s step-end infinite;
+    }
+
+    @keyframes blink {
+      0% { opacity: 1; }
+      50% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+  </style>
 </head>
 <body>
   <div id="terminal"></div>
@@ -49,48 +143,36 @@
     const pauseBetweenLines = 300;
 
     async function typeLine(text, cssClass) {
-      return new Promise(resolve => {
-        const line = document.createElement('div');
-        line.classList.add('payload-line');
-        if (cssClass) line.classList.add(...cssClass.split(' '));
+      const line = document.createElement('div');
+      line.classList.add('payload-line');
+      if (cssClass) line.classList.add(...cssClass.split(' '));
 
-        const cursor = document.createElement('span');
-        cursor.classList.add('cursor');
-        cursor.textContent = '|';
+      const cursor = document.createElement('span');
+      cursor.classList.add('cursor');
+      cursor.textContent = '|';
 
-        terminal.appendChild(line);
-        line.appendChild(cursor);
+      terminal.appendChild(line);
+      line.appendChild(cursor);
 
-        let i = 0;
-        function typeChar() {
-          if (i < text.length) {
-            cursor.insertAdjacentText('beforebegin', text.charAt(i));
-            i++;
-            setTimeout(typeChar, typingSpeed);
-          } else {
-            cursor.remove();
-            resolve();
-          }
-        }
+      for (let i = 0; i < text.length; i++) {
+        await new Promise(resolve => setTimeout(resolve, typingSpeed));
+        cursor.insertAdjacentText('beforebegin', text.charAt(i));
+      }
 
-        typeChar();
-      });
+      cursor.remove();
+      await new Promise(resolve => setTimeout(resolve, pauseBetweenLines));
     }
 
     async function runPayload() {
       for (const line of lines) {
         await typeLine(line);
-        await new Promise(r => setTimeout(r, pauseBetweenLines));
       }
 
       for (const { text, class: cssClass } of extraLines) {
         await typeLine(text, cssClass);
-        await new Promise(r => setTimeout(r, pauseBetweenLines));
       }
 
-      setTimeout(() => {
-        exitBtn.style.display = 'block';
-      }, 400);
+      exitBtn.style.display = 'block';
     }
 
     runPayload();
