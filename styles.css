@@ -39,18 +39,23 @@ html, body {
   text-shadow: none;
 }
 
-/* Terminal Payload Animation */
+/* Typing Animation */
 .payload-line {
-  opacity: 0;
   margin-bottom: 0.5em;
-  animation: type 0.05s steps(30, end) forwards;
   white-space: pre-wrap;
   word-break: break-word;
 }
 
-@keyframes type {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+/* Blinking Cursor */
+.cursor {
+  display: inline-block;
+  color: #00ffee;
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
 }
 
 /* Extra Payload Line Variants */
@@ -80,9 +85,10 @@ html, body {
   text-shadow: 0 0 4px #ff004c;
 }
 
-/* Flicker Token Animation */
+/* Flicker Animation for Token Line */
 .extra-line.flicker {
-  animation: flickerColor 0.9s infinite alternate;
+  animation:
+    flickerColor 1.2s infinite alternate;
   color: #39ff14;
   text-shadow: 0 0 4px #39ff14;
 }
