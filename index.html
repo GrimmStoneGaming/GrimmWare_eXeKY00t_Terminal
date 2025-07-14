@@ -34,50 +34,60 @@
     ];
 
     const extraLines = [
-      { text: '>>> ACCESS NODE:', class: 'green' },
-      { text: '>>> https://grimmware-os.bandcamp.com/', class: 'cyan bandcamp' },
-      { text: '>>> DECRYPTING TOKEN...', class: 'purple' },
-      { text: '>>> grimmware15 <<<', class: 'flicker' },
-      { text: '>>> DISCOUNT TOKEN VIABLE', class: 'cyan' },
-      { text: '>>> AUD!0 !NF3CT!ON !N!T!AL!Z3D', class: 'green' },
-      { text: '>>> TRANSMISSION TERMINATED', class: 'red' }
+      { text: '>>> ACCESS NODE:', class: 'extra-line green' },
+      { text: '>>> https://grimmware-os.bandcamp.com/', class: 'extra-line cyan bandcamp' },
+      { text: '>>> DECRYPTING TOKEN...', class: 'extra-line purple' },
+      { text: '>>> grimmware15 <<<', class: 'extra-line flicker' },
+      { text: '>>> DISCOUNT TOKEN VIABLE <<<', class: 'extra-line cyan' },
+      { text: '>>> AUD!0 !NF3CT!ON !N!T!AL!Z3D', class: 'extra-line green' },
+      { text: '>>> TRANSMISSION TERMINATED', class: 'extra-line red' }
     ];
 
     const terminal = document.getElementById('terminal');
     const exitBtn = document.getElementById('exitBtn');
 
-    function renderLine(text, delay, cssClass, isLink = false, isInitial = false) {
+    const typingSpeed = 25; // ms per character
+    const pauseBetweenLines = 400; // ms between each line
+
+    function typeLine(text, cssClass, isLink = false) {
       return new Promise(resolve => {
-        setTimeout(() => {
-          const line = document.createElement('div');
-          line.classList.add(isInitial ? 'payload-line' : 'extra-line');
-          if (cssClass) line.classList.add(...cssClass.split(' '));
+        const line = document.createElement('div');
+        line.classList.add('payload-line');
+        if (cssClass) line.classList.add(...cssClass.split(' '));
 
-          if (isLink) {
-            const anchor = document.createElement('a');
-            anchor.href = 'https://grimmware-os.bandcamp.com/';
-            anchor.target = '_blank';
-            anchor.className = 'bandcamp-link';
-            anchor.textContent = text;
-            line.appendChild(anchor);
+        const cursor = document.createElement('span');
+        cursor.classList.add('cursor');
+        cursor.textContent = '|';
+        line.appendChild(cursor);
+        terminal.appendChild(line);
+
+        let i = 0;
+
+        function typeChar() {
+          if (i < text.length) {
+            cursor.insertAdjacentText('beforebegin', text.charAt(i));
+            i++;
+            setTimeout(typeChar, typingSpeed);
           } else {
-            line.textContent = text;
+            cursor.remove();
+            resolve();
           }
+        }
 
-          terminal.appendChild(line);
-          resolve();
-        }, delay);
+        typeChar();
       });
     }
 
     async function runPayload() {
       for (let i = 0; i < lines.length; i++) {
-        await renderLine(lines[i], 400, null, false, true);
+        await typeLine(lines[i], '');
+        await new Promise(r => setTimeout(r, pauseBetweenLines));
       }
 
       for (let i = 0; i < extraLines.length; i++) {
         const isLink = extraLines[i].class.includes('bandcamp');
-        await renderLine(extraLines[i].text, 300, extraLines[i].class, isLink, false);
+        await typeLine(extraLines[i].text, extraLines[i].class, isLink);
+        await new Promise(r => setTimeout(r, pauseBetweenLines));
       }
 
       setTimeout(() => {
