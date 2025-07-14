@@ -43,27 +43,38 @@ html, body {
   opacity: 1;
 }
 
-.extra-line.green {
-  color: #39ff14;
-  text-shadow: 0 0 5px #39ff14;
-}
+/* 💥 Style fixes that now properly match JS-assigned classes */
+.green { color: #39ff14; text-shadow: 0 0 5px #39ff14; }
+.cyan { color: #00ffee; text-shadow: 0 0 4px #00ffee; }
+.purple { color: #c77dff; text-shadow: 0 0 4px #c77dff; }
+.red { color: #ff004c; text-shadow: 0 0 4px #ff004c; }
+.yellow { color: #ffe600; text-shadow: 0 0 5px #ffe600; }
 
-.extra-line.cyan {
-  color: #00ffee;
-  text-shadow: 0 0 4px #00ffee;
-}
-
-.extra-line.purple {
-  color: #c77dff;
-  text-shadow: 0 0 4px #c77dff;
-}
-
-.extra-line.red {
+.red-flash {
   color: #ff004c;
-  text-shadow: 0 0 4px #ff004c;
+  animation: redFlash 1s infinite alternate;
 }
 
-.extra-line.flicker {
+@keyframes redFlash {
+  0% { color: #ff004c; text-shadow: 0 0 4px #ff004c; }
+  100% { color: #000; text-shadow: none; }
+}
+
+.glitch {
+  color: #ff66ff;
+  animation: glitch 0.3s infinite;
+}
+
+@keyframes glitch {
+  0% { transform: translate(0, 0); opacity: 1; }
+  20% { transform: translate(-1px, 1px); opacity: 0.8; }
+  40% { transform: translate(1px, -1px); opacity: 0.9; }
+  60% { transform: translate(-2px, 0); opacity: 0.6; }
+  80% { transform: translate(2px, 2px); opacity: 0.7; }
+  100% { transform: translate(0, 0); opacity: 1; }
+}
+
+.flicker {
   animation: flickerColor 1.2s infinite alternate;
   color: #39ff14;
   text-shadow: 0 0 4px #39ff14;
@@ -78,6 +89,12 @@ html, body {
     color: #ff004c;
     text-shadow: 0 0 4px #ff004c;
   }
+}
+
+.bandcamp-link {
+  animation: flickerColor 1.2s infinite alternate;
+  text-decoration: none;
+  color: #00ffee;
 }
 
 .cursor {
